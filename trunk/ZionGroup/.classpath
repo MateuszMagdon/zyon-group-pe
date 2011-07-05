@@ -9,6 +9,5 @@
 	<classpathentry kind="lib" path="lib/drools-core.jar"/>
 	<classpathentry kind="lib" path="lib/janino-2.5.15.jar"/>
 	<classpathentry kind="lib" path="lib/mvel2.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.5.2.v_981_R35x.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
