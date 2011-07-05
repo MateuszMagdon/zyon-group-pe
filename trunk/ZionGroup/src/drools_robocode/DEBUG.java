@@ -1,4 +1,4 @@
-package babador;
+package drools_robocode;
 
 import java.util.List;
 

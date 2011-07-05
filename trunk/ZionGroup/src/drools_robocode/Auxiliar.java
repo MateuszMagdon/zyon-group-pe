@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package babador;
+package drools_robocode;
 
 /**
  * Funciones auxiliares para menejar angulos, distancias, puntos, etc.
