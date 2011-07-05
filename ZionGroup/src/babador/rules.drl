@@ -1,6 +1,5 @@
-package drools_robocode
+package babador
 
-import drools_robocode.*;
 import robocode.*;
 import robocode.ScannedRobotEvent;
 
