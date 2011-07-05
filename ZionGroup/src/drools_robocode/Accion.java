@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package babador;
+package drools_robocode;
 
 import robocode.AdvancedRobot;
 
