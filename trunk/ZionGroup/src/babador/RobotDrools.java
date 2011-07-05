@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package drools_robocode;
+package babador;
 
 import java.util.Vector;
 import org.drools.KnowledgeBase;
@@ -32,7 +32,7 @@ import robocode.StatusEvent;
  */
 public class RobotDrools extends AdvancedRobot {
 
-    public static String FICHERO_REGLAS = "reglas_robot.drl";
+    public static String FICHERO_REGLAS = "rules.drl";
     public static String CONSULTA_ACCIONES = "consulta_acciones";
     
     private KnowledgeBuilder kbuilder;

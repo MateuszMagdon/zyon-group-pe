@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package drools_robocode;
+package babador;
 
 import java.util.List;
 import java.util.Vector;
