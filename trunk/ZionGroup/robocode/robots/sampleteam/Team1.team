@@ -1,0 +1,6 @@
+#Robocode robot team
+#Mon Jun 13 21:31:03 GMT-03:00 2011
+team.members=sampleteam.MyFirstLeader,sampleteam.MyFirstDroid,sampleteam.MyFirstDroid,sampleteam.MyFirstDroid,sampleteam.MyFirstDroid
+team.author.name=
+robocode.version=1.7.3.0
+team.description=First team.
