@@ -5,7 +5,11 @@
 
 package drools_robocode;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import robocode.AdvancedRobot;
+import robocode.TeamRobot;
 
 /**
  *
@@ -15,8 +19,9 @@ public class Accion {
     private int        tipo;
     private double     parametro;
     private int        prioridad;
+    private EnemySpotted		complexParameter;
 
-    private AdvancedRobot robot;   // Referncia al robot que ejecutara la accion
+    private TeamRobot robot;   // Referncia al robot que ejecutara la accion
 
     public static final int AVANZAR=1;
     public static final int RETROCEDER=2;
@@ -28,6 +33,7 @@ public class Accion {
     public static final int GIRAR_RADAR_IZQ=8;
     public static final int GIRAR_CANON_DER=9;
     public static final int GIRAR_CANON_IZQ=10;
+    public static final int BROADCAST = 11;
 
 
     public Accion() {
@@ -37,6 +43,12 @@ public class Accion {
         this.tipo = tipo;
         this.parametro = parametro;
         this.prioridad = prioridad;
+    }
+    
+    public Accion(int tipo, EnemySpotted complexParameter, int prioridad){
+    	this.tipo = tipo;
+    	this.complexParameter = complexParameter;
+    	this.prioridad = prioridad;
     }
 
     public double getParametro() {
@@ -78,11 +90,16 @@ public class Accion {
                 case Accion.GIRAR_RADAR_IZQ: robot.setTurnRadarLeft(parametro); break;
                 case Accion.GIRAR_TANQUE_DER: robot.setTurnRight(parametro); break;
                 case Accion.GIRAR_TANQUE_IZQ: robot.setTurnLeft(parametro); break;
+                case Accion.BROADCAST: try {
+					robot.broadcastMessage(complexParameter);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} break;
             }
         }
     }
 
-    void setRobot(AdvancedRobot robot) {
+    void setRobot(TeamRobot robot) {
         this.robot = robot;
     }
 
