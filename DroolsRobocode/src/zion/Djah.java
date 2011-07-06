@@ -7,6 +7,7 @@ package zion;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Vector;
+
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
@@ -16,7 +17,7 @@ import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.FactHandle;
 import org.drools.runtime.rule.QueryResultsRow;
-import robocode.AdvancedRobot;
+
 import robocode.BulletHitBulletEvent;
 import robocode.BulletHitEvent;
 import robocode.BulletMissedEvent;
@@ -25,9 +26,7 @@ import robocode.HitRobotEvent;
 import robocode.HitWallEvent;
 import robocode.MessageEvent;
 import robocode.RobotDeathEvent;
-import robocode.RobotStatus;
 import robocode.ScannedRobotEvent;
-import robocode.StatusEvent;
 import robocode.TeamRobot;
 
 /**
@@ -37,7 +36,7 @@ import robocode.TeamRobot;
 public class Djah extends TeamRobot {
 
     public static String RULES_FILE = "rules.drl";
-    public static String CONSULTA_ACCIONES = "consulta_acciones";
+    public static String CONSULTA_ACCIONES = "query";
     
     private KnowledgeBuilder kbuilder;
     private KnowledgeBase kbase;   // Base de conocimeintos

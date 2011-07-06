@@ -1,0 +1,90 @@
+package droolsIntegration
+
+import droolsIntegration.*;
+import robocode.*;
+import robocode.ScannedRobotEvent;
+import util.Util;
+
+
+query "actionQuery"
+  action: Action()
+end
+
+declare Target
+   name: String
+   x: double
+   y: double
+   distance: double
+end
+
+rule "depurar acciones del mismo tipo"
+when
+	$action1: Action($type: type, $pri1: priority)
+	$action2: Action(type == $type, $pri2: priority)
+	eval ($pri1 > $pri2)
+then
+    retract($action2);     // Elimina la accion menos prioritaria 
+    //System.out.println("regla 1");
+end
+
+rule "sin robots a la vista -> giro completo del radar"
+when
+	not (exists ScannedRobotEvent())
+then
+	insert (new Action(ActionType.TURN_RADAR_RIGHT, 360, 1));
+	System.out.println("Nenhum robo detectado -> girando o radar");
+end
+
+rule "parado sin victima -> moverse al azar (girar+avanzar)"
+	when
+	  RobotState( distanceRemaining == 0 )
+	  not (exists Target())
+	then
+	  //insert(new Action(ActionType.TURN_RADAR_RIGHT, 360, 1));
+	  //insert(new Action(ActionType.TURN_RIGHT, 90, 1));
+	  //insert(new Action(ActionType.TURN_GUN_RIGHT, 90, 1));
+	  System.out.println("Parado e sem v’tima -> movendo aleatoriamente");
+end
+
+rule "victima detectada -> actualizar datos e ir hacia ella"
+   	when
+      $target: Target ($targetName: name)
+      $status : RobotState()
+   	  $scannedTarget: ScannedRobotEvent(name == $targetName)
+   	then
+	   	double enemyBearing = Util.absoluteAngle($status.getHeading(), $scannedTarget.getBearing());
+	    double enemyX = $status.getX() + $scannedTarget.getDistance() * Math.sin(Math.toRadians(enemyBearing));
+		double enemyY = $status.getY() + $scannedTarget.getDistance() * Math.cos(Math.toRadians(enemyBearing));
+	  	  
+	  	$target.setX(enemyX);                                            
+	  	$target.setY(enemyY);
+	  	$target.setDistance($scannedTarget.getDistance());
+	  
+	  	insert(new Action(ActionType.TURN_RIGHT, $scannedTarget.getBearing(), 1));
+	  	double relativeGunAngle = Util.relativeAngle($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
+	 	insert(new Action(ActionType.TURN_GUN_RIGHT, ($scannedTarget.getBearing() - relativeGunAngle), 1));
+	  	double relativeRadarAngle =  Util.relativeAngle($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
+	  	insert(new Action(ActionType.TURN_RADAR_RIGHT, ($scannedTarget.getBearing() - relativeRadarAngle), 1));
+	  	//insert(new Action(ActionType.AHEAD, ($scannedTarget.getDistance()-100), 1));
+	  	System.out.println("regla 4");
+end
+
+rule "sin victima -> tomar la primera que aparezca"
+when
+	not (exists Target())
+	$scannedTarget: ScannedRobotEvent()
+	$status: RobotState()
+then
+      	Target target = new Target();
+      	target.setName($scannedTarget.getName());
+      	insert(target);
+      	
+	  	insert(new Action(ActionType.TURN_RIGHT, $scannedTarget.getBearing(), 1));
+	  	double relativeGunAngle = Util.relativeAngle($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
+	 	insert(new Action(ActionType.TURN_GUN_RIGHT, ($scannedTarget.getBearing() - relativeGunAngle), 1));
+	  	double relativeRadarAngle =  Util.relativeAngle($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
+	  	insert(new Action(ActionType.TURN_RADAR_RIGHT, ($scannedTarget.getBearing() - relativeRadarAngle), 1));
+end
+
+
+

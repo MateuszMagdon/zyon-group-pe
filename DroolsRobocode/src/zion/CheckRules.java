@@ -17,12 +17,14 @@ import org.drools.runtime.rule.FactHandle;
 import org.drools.runtime.rule.QueryResultsRow;
 
 import robocode.*;
+import zion.Accion;
+import zion.RobotDrools;
 
 /**
  *
  * @author ribadas
  */
-public class ComprobarReglas {
+public class CheckRules {
 
     public static String FICHERO_REGLAS = "reglas_robot.drl";
     public static String CONSULTA_ACCIONES = "consulta_acciones";
@@ -31,7 +33,7 @@ public class ComprobarReglas {
     private StatefulKnowledgeSession ksession;  // Memoria activa
     private Vector<FactHandle> referenciasHechosActuales = new Vector<FactHandle>();
 
-    public ComprobarReglas() {
+    public CheckRules() {
     	String modoDebug = System.getProperty("robot.debug", "true");
     	DEBUG.habilitarModoDebug(modoDebug.equals("true"));
         crearBaseConocimiento();
@@ -55,13 +57,13 @@ public class ComprobarReglas {
 
     private void crearBaseConocimiento() {
     	String ficheroReglas;
-    	ficheroReglas = System.getProperty("robot.reglas", ComprobarReglas.FICHERO_REGLAS);
+    	ficheroReglas = System.getProperty("robot.reglas", CheckRules.FICHERO_REGLAS);
     	
     	DEBUG.mensaje("crear base de conocimientos");
         kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         
     	DEBUG.mensaje("cargar reglas desde "+ficheroReglas);
-        kbuilder.add(ResourceFactory.newClassPathResource(ficheroReglas,ComprobarReglas.class), ResourceType.DRL);
+        kbuilder.add(ResourceFactory.newClassPathResource(ficheroReglas,CheckRules.class), ResourceType.DRL);
         if (kbuilder.hasErrors()) {
             System.err.println(kbuilder.getErrors().toString());
         }
@@ -74,7 +76,7 @@ public class ComprobarReglas {
     }
 
     public static void main(String args[]) {
-        ComprobarReglas d = new ComprobarReglas();
+        CheckRules d = new CheckRules();
     }
 
     private List<Accion> recuperarAcciones() {
