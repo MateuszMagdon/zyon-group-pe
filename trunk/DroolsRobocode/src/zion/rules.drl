@@ -6,7 +6,7 @@ import robocode.ScannedRobotEvent;
 
 
 // Se debe incluir SIEMPRE la definición de esta consulta, la usa el robot para recuperar las acciones
-query "consulta_acciones"
+query "query"
   accion: Accion()
 end
 

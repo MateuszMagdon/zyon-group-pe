@@ -5,6 +5,8 @@ import java.util.List;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.FactHandle;
 
+import zion.Accion;
+
 public final class DEBUG {
 	public static boolean modoDebugHabilitado = false;
 
