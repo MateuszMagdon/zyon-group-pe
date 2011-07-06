@@ -125,6 +125,8 @@ then
       victima.setDistancia($victimaEscaneada.getDistance());
       insert(victima);
       
+      insert(new Accion(Accion.BROADCAST, new EnemySpotted($victimaEscaneada.getName()), 1));
+      
       insert(new Accion(Accion.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
       double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
       insert(new Accion(Accion.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
@@ -132,6 +134,17 @@ then
       insert(new Accion(Accion.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
       insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-100), 1));    
       System.out.println("regla 6"); 
+end
+
+rule "sin victima"
+when
+	not (exists Victima())
+	$enemyMessage: EnemySpotted($enemyName: enemyName != null)
+then
+    Victima victima = new Victima();
+      victima.setNombre($enemyName);
+      insert(victima);
+      System.out.println("RODOU!!");
 end
 
 // Eliminar el hecho Victima() actual una vez liquidada

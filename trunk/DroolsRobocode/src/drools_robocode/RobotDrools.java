@@ -4,6 +4,8 @@
  */
 package drools_robocode;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.Vector;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
@@ -21,16 +23,18 @@ import robocode.BulletMissedEvent;
 import robocode.HitByBulletEvent;
 import robocode.HitRobotEvent;
 import robocode.HitWallEvent;
+import robocode.MessageEvent;
 import robocode.RobotDeathEvent;
 import robocode.RobotStatus;
 import robocode.ScannedRobotEvent;
 import robocode.StatusEvent;
+import robocode.TeamRobot;
 
 /**
  *
  * @author ribadas
  */
-public class RobotDrools extends AdvancedRobot {
+public class RobotDrools extends TeamRobot {
 
     public static String FICHERO_REGLAS = "reglas_robot.drl";
     public static String CONSULTA_ACCIONES = "consulta_acciones";
@@ -184,9 +188,65 @@ public class RobotDrools extends AdvancedRobot {
     }
 
     @Override
-    public void onScannedRobot(ScannedRobotEvent event) {
-        referenciasHechosActuales.add(ksession.insert(event));
+    public void onScannedRobot(ScannedRobotEvent ee) {
+    	
+    	if(this.getName().contains(getBotNameWithNoNumber(ee.getName()))){
+    		System.out.println("Robo da mesma espŽcie!");
+    	} else {
+    		referenciasHechosActuales.add(ksession.insert(ee));    		
+    	}
+    	double angle = Math.toRadians((getHeading() + ee.getBearing()) % 360);
+    	
+		 
+	     // Calculate the coordinates of the robot
+	     scannedX = (int)(getX() + Math.sin(angle) * ee.getDistance());
+	     scannedY = (int)(getY() + Math.cos(angle) * ee.getDistance());
+	}
+    
+    static public int getBotNumber(String name) {
+     	String n = "0";
+     	int low = name.indexOf("(")+1; int hi = name.lastIndexOf(")");
+     	if (low >= 0 && hi >=0) { n = name.substring(low, hi); }
+     	return Integer.parseInt(n);
     }
+    
+    static public String getBotNameWithNoNumber(String name) {
+     	String n = "0";
+     	int hi = name.indexOf("(");
+     	if (hi >= 0) { 
+     		n = name.substring(0, hi - 1); 
+     	}
+     	return n;
+    }
+    
+    @Override
+    public void onMessageReceived(MessageEvent event) {
+    	if(event.getMessage() instanceof EnemySpotted){
+    		referenciasHechosActuales.add(ksession.insert(event.getMessage()));
+    	}
+    }
+	
+	 // Paint a transparent square on top of the last scanned robot
+	 public void onPaint(Graphics2D g) {
+	     // Set the paint color to a red half transparent color
+	     g.setColor(new Color(0x00, 0xff, 0x00, 0x80));
+	 
+	     // Draw a line from our robot to the scanned robot
+	     g.drawLine(scannedX, scannedY, (int)getX(), (int)getY());
+	 
+	     // Draw a filled square on top of the scanned robot that covers it
+	     g.fillRect(scannedX - 20, scannedY - 20, 40, 40);
+	     
+	     int pointX = (int)(getX() + Math.sin(getHeading()) * 20);
+	     int pointY = (int)(getY() + Math.cos(getHeading()) * 20);
+	     
+	     g.setColor(new Color(0x00, 0x00, 0xff, 0x80));
+	     g.drawLine(pointX, pointY, (int)getX(), (int)getY());
+	 }
+	
+	// The coordinates of the last scanned robot
+	 int scannedX = Integer.MIN_VALUE;
+	 int scannedY = Integer.MIN_VALUE;
 
 
 }
