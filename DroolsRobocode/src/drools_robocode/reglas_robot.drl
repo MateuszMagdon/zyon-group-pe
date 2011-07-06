@@ -89,7 +89,7 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
       insert(new Accion(Accion.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
       double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
       insert(new Accion(Accion.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
-      insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-100), 1));
+      insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-120), 1));
 end
 
 
@@ -132,7 +132,7 @@ then
       insert(new Accion(Accion.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
       double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
       insert(new Accion(Accion.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
-      insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-100), 1));    
+      insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-120), 1));    
       System.out.println("regla 6"); 
 end
 

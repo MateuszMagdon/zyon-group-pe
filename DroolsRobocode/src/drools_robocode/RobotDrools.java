@@ -43,6 +43,7 @@ public class RobotDrools extends TeamRobot {
     private KnowledgeBase kbase;   // Base de conocimeintos
     private StatefulKnowledgeSession ksession;  // Memoria activa
     private Vector<FactHandle> referenciasHechosActuales = new Vector<FactHandle>();
+	private int missedCount;
 
     
     public RobotDrools(){
@@ -154,6 +155,11 @@ public class RobotDrools extends TeamRobot {
     // Insertar en la memoria activa los distintos tipos de eventos recibidos 
     @Override
     public void onBulletHit(BulletHitEvent event) {
+    	String hitRobot = event.getName();
+    	if(this.getName().contains(getBotNameWithNoNumber(hitRobot))){
+    		turnRight(90);
+    		ahead(100);
+    	}
           referenciasHechosActuales.add(ksession.insert(event));
     }
 
@@ -165,6 +171,12 @@ public class RobotDrools extends TeamRobot {
     @Override
     public void onBulletMissed(BulletMissedEvent event) {
         referenciasHechosActuales.add(ksession.insert(event));
+        missedCount++;
+        if(missedCount > 5){
+        	turnRight(Math.random() * 180);
+    		ahead(Math.random() * 100);
+    		missedCount = 0;
+        }
     }
 
     @Override
@@ -174,6 +186,7 @@ public class RobotDrools extends TeamRobot {
 
     @Override
     public void onHitRobot(HitRobotEvent event) {
+    	
         referenciasHechosActuales.add(ksession.insert(event));
     }
 
