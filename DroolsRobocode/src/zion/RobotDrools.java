@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package drools_robocode;
+package zion;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -36,7 +36,7 @@ import robocode.TeamRobot;
  */
 public class RobotDrools extends TeamRobot {
 
-    public static String FICHERO_REGLAS = "reglas_robot.drl";
+    public static String FICHERO_REGLAS = "rules.drl";
     public static String CONSULTA_ACCIONES = "consulta_acciones";
     
     private KnowledgeBuilder kbuilder;

@@ -1,6 +1,6 @@
-package drools_robocode
+package zion
 
-import drools_robocode.*;
+import zion.*;
 import robocode.*;
 import robocode.ScannedRobotEvent;
 

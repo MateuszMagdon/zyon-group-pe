@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package drools_robocode;
+package zion;
 
 import java.io.IOException;
 import java.io.Serializable;
