@@ -50,6 +50,13 @@ public class SergioReis extends TeamRobot {
 
 	@Override
 	public void run() {
+		
+		setBodyColor(Color.green);
+		setGunColor(Color.blue);
+		setRadarColor(Color.red);
+		setScanColor(Color.yellow);
+		setBulletColor(Color.red);
+		
 		DEBUG.habilitarModoDebug(System.getProperty("robot.debug", "true").equals("true"));    	
 
 		// Crear Base de Conocimiento y cargar reglas

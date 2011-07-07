@@ -101,7 +101,7 @@ end
 
 // Victima detectada por radar, si estÃ¡ en el punto de mira (anguloRelativoCaÃ±Ã³n == anguloRelativoVictima) con un margen de 2 grados, disparar con el maximo disponible
 //  (se activarÃ¡ a lavez que la regla anterior)
-rule "victima en punto de mira -> disparar"
+rule "Alvo na mira"
    when
       $status : EstadoRobot()
       $datosVictima : Victima ($nombreVictima: nombre)
@@ -116,13 +116,13 @@ rule "victima en punto de mira -> disparar"
       insert(new Accion(Accion.BROADCAST, new EnemySpotted($datosVictima.getNombre(), p.getX(), p.getY()), 1));
    	  
       insert(new Accion(Accion.DISPARAR, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
-      System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
+      System.out.println("Target "+$nombreVictima+" aimed!");
 end
 
 
 
 // Cuando no hay una vÃ­ctima seÃ±alada y se escanea un robot,  anotarlo como vÃ­ctima e ir hacia Ã©l apuntando radar y caÃ±Ã³n
-rule "sin victima -> tomar la primera que aparezca"
+rule "Primeiro inimigo encontrado pelo radar"
 when
 	not (exists Victima())
 	$victimaEscaneada: ScannedRobotEvent()
@@ -150,7 +150,7 @@ then
       System.out.println("regla 6"); 
 end
 
-rule "sin victima"
+rule "Quando n‹o existir v’tima e uma mensagem de detec‹o de inimigo -> v’tima Ž esse inimigo"
 when
 	not (exists Victima())
 	$enemyMessage: EnemySpotted($enemyName: enemyName != null)
@@ -158,7 +158,7 @@ then
     Victima victima = new Victima();
     victima.setNombre($enemyName);
     insert(victima);
-    System.out.println("RODOU!!");
+    System.out.println($enemyName + "Ž o alvo");
 end
 
 // Eliminar el hecho Victima() actual una vez liquidada
@@ -168,7 +168,7 @@ when
    RobotDeathEvent( name == $nombreVictima )
 then 
    retract($victima);
-   System.out.println("Uno menos");
+   System.out.println("Morreu, pai!!!");
 end
 
 

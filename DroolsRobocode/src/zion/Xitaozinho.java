@@ -14,6 +14,7 @@
 package zion;
 
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import robocode.BulletHitEvent;
@@ -38,6 +39,11 @@ public class Xitaozinho extends TeamRobot implements Droid {
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
 		setAdjustRadarForRobotTurn(true);
+		setBodyColor(Color.yellow);
+		setGunColor(Color.blue);
+		setRadarColor(Color.red);
+		setScanColor(Color.yellow);
+		setBulletColor(Color.red);
 	}
 
 	@Override
