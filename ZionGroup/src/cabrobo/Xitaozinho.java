@@ -11,7 +11,7 @@
  *     Flemming N. Larsen
  *     - Maintainance
  *******************************************************************************/
-package mysampleteam;
+package cabrobo;
 
 
 import java.awt.geom.Point2D;
@@ -63,6 +63,9 @@ public class Xitaozinho extends TeamRobot implements Droid {
 			setScanColor(c.scanColor);
 			setBulletColor(c.bulletColor);
 		}
+		else if (e.getMessage() instanceof RobotColors) {
+			
+		}
 		else if (e.getMessage() instanceof EnemyData) {
 			EnemyData ed = (EnemyData) e.getMessage();
 			Point p = ed.p;
@@ -78,8 +81,7 @@ public class Xitaozinho extends TeamRobot implements Droid {
 			double battleFieldHeight = getBattleFieldHeight(), 
 			       battleFieldWidth = getBattleFieldWidth();
 			double predictedX = enemyX, predictedY = enemyY;
-			while((++deltaTime) * (20.0 - 3.0 * bulletPower) < 
-			      Point2D.Double.distance(getX(), getY(), predictedX, predictedY)){		
+			while((++deltaTime) * (20.0 - 3.0 * bulletPower) < Point2D.Double.distance(getX(), getY(), predictedX, predictedY)){		
 				predictedX += Math.sin(ed.enemyHeading) * ed.enemyVelocity;	
 				predictedY += Math.cos(ed.enemyHeading) * ed.enemyVelocity;
 				if(	predictedX < 18.0 

@@ -9,7 +9,7 @@
  *     Mathew A. Nelson
  *     - Initial implementation
  *******************************************************************************/
-package mysampleteam;
+package cabrobo;
 
 
 /**
