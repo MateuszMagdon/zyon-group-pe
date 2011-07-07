@@ -83,6 +83,11 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
       $datosVictima.setX(Auxiliar.calcularX($status.getX(), anguloAbsoluto, $victimaEscaneada.getDistance()));                                            
       $datosVictima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
       $datosVictima.setDistancia($victimaEscaneada.getDistance());
+      // ########### AQUI!!
+      //insert(new Accion(Accion.BROADCAST, new EnemySpotted($datosVictima.getNombre(), $victimaEscaneada.getBearing(), $victimaEscaneada.getDistance()), 1));
+      
+      Point p = EnemySpotted.calcularPonto($status.getX(), $status.getY(), $status.getHeading(), $victimaEscaneada.getBearing(), $victimaEscaneada.getDistance());
+      insert(new Accion(Accion.BROADCAST, new EnemySpotted($datosVictima.getNombre(), p.getX(), p.getY()), 1));
       
       insert(new Accion(Accion.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
       double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
@@ -99,11 +104,17 @@ end
 rule "victima en punto de mira -> disparar"
    when
       $status : EstadoRobot()
-      Victima ($nombreVictima: nombre)
+      $datosVictima : Victima ($nombreVictima: nombre)
       // Victima detectada y cañon apunta en su angulo (con un margen de 2 grados)
-      ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: x)                       
+      $scanned : ScannedRobotEvent(name == $nombreVictima, $anguloRelativoVictima: bearing)                       
       eval (Math.abs($anguloRelativoVictima - Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading())) <= 2)   
    then
+   // ########### AQUI!!!
+   	  //insert(new Accion(Accion.BROADCAST, new EnemySpotted($datosVictima.getNombre(), $scanned.getBearing(), $scanned.getDistance()), 1));
+   	  
+   	  Point p = EnemySpotted.calcularPonto($status.getX(), $status.getY(), $status.getHeading(), $scanned.getBearing(), $scanned.getDistance());
+      insert(new Accion(Accion.BROADCAST, new EnemySpotted($datosVictima.getNombre(), p.getX(), p.getY()), 1));
+   	  
       insert(new Accion(Accion.DISPARAR, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
       System.out.println("Victima "+$nombreVictima+" a tiro => disparar");
 end
@@ -124,8 +135,11 @@ then
       victima.setY(Auxiliar.calcularX($status.getY(), anguloAbsoluto, $victimaEscaneada.getDistance()));
       victima.setDistancia($victimaEscaneada.getDistance());
       insert(victima);
+      // ########### AQUI!!!
+//      insert(new Accion(Accion.BROADCAST, new EnemySpotted(victima.getNombre(), $victimaEscaneada.getBearing(), $victimaEscaneada.getDistance()), 1));
       
-      insert(new Accion(Accion.BROADCAST, new EnemySpotted(victima.getNombre(), victima.getX(), victima.getY()), 1));
+      Point p = EnemySpotted.calcularPonto($status.getX(), $status.getY(), $status.getHeading(), $victimaEscaneada.getBearing(), $victimaEscaneada.getDistance());
+      insert(new Accion(Accion.BROADCAST, new EnemySpotted(victima.getNombre(), p.getX(), p.getY()), 1));
       
       insert(new Accion(Accion.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
       double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
@@ -162,7 +176,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con muro"
 when
-   HitWallEvent($anguloRelativo: x)
+   HitWallEvent($anguloRelativo: bearing)
 then
    insert(new Accion(Accion.GIRAR_TANQUE_DER, (- $anguloRelativo), 5));
    insert(new Accion(Accion.AVANZAR, 100, 5));
@@ -173,7 +187,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con victima"
 when
-   HitRobotEvent($nombre: name, $anguloRelativo: x)
+   HitRobotEvent($nombre: name, $anguloRelativo: bearing)
    Victima(nombre == $nombre)
 then
    insert(new Accion(Accion.RETROCEDER, 100, 5));
@@ -183,7 +197,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con otro robot"
 when
-   HitRobotEvent($nombre: name, $anguloRelativo: x)
+   HitRobotEvent($nombre: name, $anguloRelativo: bearing)
    (or (not (exists Victima()))
        (Victima(nombre != $nombre)))
 then

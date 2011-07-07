@@ -6,7 +6,6 @@ import robocode.ScannedRobotEvent;
 import util.Util;
 
 
-// Se debe incluir SIEMPRE la definición de esta consulta, la usa el robot para recuperar las acciones
 query "actionQuery"
   action: Action()
 end
@@ -70,7 +69,7 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
       $status : RobotState()
       $scannedTarget: ScannedRobotEvent(name == $targetName)
    then
-      	double enemyBearing = $status.getHeading() + $scannedTarget.getBearing();
+      	double x = $status.getHeading() + $scannedTarget.getBearing();
       	double enemyX = $status.getX() + $scannedTarget.getDistance() * Math.sin(Math.toRadians(enemyBearing));
 		double enemyY = $status.getY() + $scannedTarget.getDistance() * Math.cos(Math.toRadians(enemyBearing));
   	  
@@ -96,7 +95,7 @@ rule "victima en punto de mira -> disparar"
       $status : RobotState()
       Target ($targetName: name)
       // Victima detectada y cañon apunta en su angulo (con un margen de 2 grados)
-      ScannedRobotEvent(name == $targetName, $relativeTargetAngle: bearing)                       
+      ScannedRobotEvent(name == $targetName, $relativeTargetAngle: x)                       
       eval (Math.abs($relativeTargetAngle - Util.relativeAngle($status.getHeading(), $status.getGunHeading())) <= 2)   
    then
       insert(new Action(ActionType.FIRE, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
@@ -114,7 +113,7 @@ when
 then
       	Target target = new Target();
       	target.setName($scannedTarget.getName());
-      	double enemyBearing = $status.getHeading() + $scannedTarget.getBearing();
+      	double x = $status.getHeading() + $scannedTarget.getBearing();
       	double enemyX = $status.getX() + $scannedTarget.getDistance() * Math.sin(Math.toRadians(enemyBearing));
 		double enemyY = $status.getY() + $scannedTarget.getDistance() * Math.cos(Math.toRadians(enemyBearing));
   	  
@@ -148,7 +147,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con muro"
 when
-   HitWallEvent($relativeAngle: bearing)
+   HitWallEvent($relativeAngle: x)
 then
    insert(new Action(ActionType.TURN_RIGHT, (- $relativeAngle), 5));
    insert(new Action(ActionType.AHEAD, 100, 5));
@@ -159,7 +158,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con victima"
 when
-   HitRobotEvent($name: name, $relativeAngle: bearing)
+   HitRobotEvent($name: name, $relativeAngle: x)
    Target(name == $name)
 then
    insert(new Action(ActionType.BACK, 100, 5));
@@ -169,7 +168,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con otro robot"
 when
-   HitRobotEvent($name: name, $relativeAngle: bearing)
+   HitRobotEvent($name: name, $relativeAngle: x)
    (or (not (exists Target())) (Target(name != $name)) )
 then
    insert(new Action(ActionType.TURN_RIGHT, (- $relativeAngle*1.50), 5));

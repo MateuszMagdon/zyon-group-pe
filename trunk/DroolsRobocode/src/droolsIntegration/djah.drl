@@ -52,7 +52,7 @@ rule "victima detectada -> actualizar datos e ir hacia ella"
       $status : RobotState()
    	  $scannedTarget: ScannedRobotEvent(name == $targetName)
    	then
-	   	double enemyBearing = Util.absoluteAngle($status.getHeading(), $scannedTarget.getBearing());
+	   	double x = Util.absoluteAngle($status.getHeading(), $scannedTarget.getBearing());
 	    double enemyX = $status.getX() + $scannedTarget.getDistance() * Math.sin(Math.toRadians(enemyBearing));
 		double enemyY = $status.getY() + $scannedTarget.getDistance() * Math.cos(Math.toRadians(enemyBearing));
 	  	  
