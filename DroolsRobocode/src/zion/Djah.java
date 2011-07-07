@@ -155,7 +155,7 @@ public class Djah extends TeamRobot {
     @Override
     public void onBulletHit(BulletHitEvent event) {
     	String hitRobot = event.getName();
-    	if(this.getName().contains(getBotNameWithNoNumber(hitRobot))){
+    	if(isTeammate(hitRobot)){
     		turnRight(90);
     		ahead(100);
     	}
@@ -202,8 +202,8 @@ public class Djah extends TeamRobot {
     @Override
     public void onScannedRobot(ScannedRobotEvent ee) {
     	
-    	if(this.getName().contains(getBotNameWithNoNumber(ee.getName()))){
-    		System.out.println("Robo da mesma espécie!");
+    	if(isTeammate(ee.getName())){
+    		System.out.println("Robo do mesmo time!");
     	} else {
     		referenciasHechosActuales.add(ksession.insert(ee));    		
     	}

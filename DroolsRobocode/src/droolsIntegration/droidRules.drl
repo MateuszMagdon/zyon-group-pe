@@ -74,7 +74,7 @@ rule "Target detected"
       	$status : RobotState()
       	$scannedTarget: ScannedRobotEvent(name == $targetName)
    then
-  	  	double enemyBearing = $status.getHeading() + $scannedTarget.getBearing();
+  	  	double x = $status.getHeading() + $scannedTarget.getBearing();
       	double enemyX = $status.getX() + $scannedTarget.getDistance() * Math.sin(Math.toRadians(enemyBearing));
 		double enemyY = $status.getY() + $scannedTarget.getDistance() * Math.cos(Math.toRadians(enemyBearing));
   	  
@@ -94,7 +94,7 @@ rule "Target in fire zone -> Fire"
    when
       $status : RobotState()
       Target ($targetName: name)
-      ScannedRobotEvent(name == $targetName, $relativeTargetAngle: bearing)                       
+      ScannedRobotEvent(name == $targetName, $relativeTargetAngle: x)                       
       eval (Math.abs($relativeTargetAngle - Util.relativeAngle($status.getHeading(), $status.getGunHeading())) <= 3)   
    then
       insert(new Action(ActionType.FIRE, Math.min(Rules.MAX_BULLET_POWER, 0.10*$status.getEnergy()), 1));
@@ -118,7 +118,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con muro"
 when
-   HitWallEvent($relativeAngle: bearing)
+   HitWallEvent($relativeAngle: x)
 then
    insert(new Action(ActionType.TURN_RIGHT, (- $relativeAngle), 5));
    insert(new Action(ActionType.AHEAD, 100, 5));
@@ -129,7 +129,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con victima"
 when
-   HitRobotEvent($name: name, $relativeAngle: bearing)
+   HitRobotEvent($name: name, $relativeAngle: x)
    Target(name == $name)
 then
    insert(new Action(ActionType.BACK, 100, 5));
@@ -139,7 +139,7 @@ end
 //   (tiene prioridad 5 para evitar que otras acciones "normales" nos hagan quedar estancados)  
 rule "choque con otro robot"
 when
-   HitRobotEvent($name: name, $relativeAngle: bearing)
+   HitRobotEvent($name: name, $relativeAngle: x)
    (or (not (exists Target())) (Target(name != $name)) )
 then
    insert(new Action(ActionType.TURN_RIGHT, (- $relativeAngle*1.50), 5));
