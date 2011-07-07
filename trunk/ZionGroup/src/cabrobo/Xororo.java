@@ -11,7 +11,7 @@
  *     Flemming N. Larsen
  *     - Maintainance
  *******************************************************************************/
-package mysampleteam;
+package cabrobo;
 
 
 import robocode.HitByBulletEvent;
