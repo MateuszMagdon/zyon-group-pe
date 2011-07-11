@@ -61,9 +61,9 @@ rule "Alvo detectado"
       $datosVictima.setDistancia($victimaEscaneada.getDistance());
       
       insert(new Accion(Accion.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
-      double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
+      double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading());  
       insert(new Accion(Accion.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
-      double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
+      double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading());  
       insert(new Accion(Accion.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
       insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-120), 1));
 end
@@ -96,9 +96,9 @@ then
       insert(new Accion(Accion.BROADCAST, new EnemySpotted(victima.getNombre(), victima.getX(), victima.getY()), 1));
       
       insert(new Accion(Accion.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
-      double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
+      double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); 
       insert(new Accion(Accion.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
-      double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
+      double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading());  
       insert(new Accion(Accion.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
       insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-120), 1));    
 end
@@ -111,7 +111,7 @@ then
     Victima victima = new Victima();
     victima.setNombre($enemyName);
     insert(victima);
-    System.out.println("RODOU!!");
+    //System.out.println("RODOU!!");
 end
 
 rule "O alvo foi destru’do"
