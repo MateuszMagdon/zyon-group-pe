@@ -62,9 +62,9 @@ rule "Alvo detectado"
       insert(new Accion(Accion.BROADCAST, new EnemySpotted($datosVictima.getNombre(), p.getX(), p.getY()), 1));
       
       insert(new Accion(Accion.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
-      double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
+      double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); 
       insert(new Accion(Accion.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
-      double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
+      double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading());  
       insert(new Accion(Accion.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
       insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-120), 1));
 end
@@ -101,9 +101,9 @@ then
       insert(new Accion(Accion.BROADCAST, new EnemySpotted(victima.getNombre(), p.getX(), p.getY()), 1));
       
       insert(new Accion(Accion.GIRAR_TANQUE_DER, $victimaEscaneada.getBearing(), 1));
-      double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); // Descontar el desplazam. actual del canon 
+      double anguloRelativoCanon = Auxiliar.anguloRelativo($status.getHeading(), $status.getGunHeading()); 
       insert(new Accion(Accion.GIRAR_CANON_DER, ($victimaEscaneada.getBearing() - anguloRelativoCanon), 1));
-      double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading()); // Descontar el desplazam. actual del radar  
+      double anguloRelativoRadar =  Auxiliar.anguloRelativo($status.getHeading(), $status.getRadarHeading());  
       insert(new Accion(Accion.GIRAR_RADAR_DER, ($victimaEscaneada.getBearing() - anguloRelativoRadar), 1));
       insert(new Accion(Accion.AVANZAR, ($victimaEscaneada.getDistance()-120), 1));    
       System.out.println("Regra 6"); 
@@ -156,3 +156,14 @@ then
    insert(new Accion(Accion.AVANZAR, 100, 5));
 end
 
+rule "Encontrado o poss’vel l’der"
+when 
+	LeaderFound( $leaderName : name )
+	$victima: Victima ($name : nombre)
+then
+	$victima.setNombre($leaderName);
+	//retract($victima);
+	//Victima vit = new Victima();
+    //vit.setNombre($leaderName);
+  //  insert(vit);
+end

@@ -34,6 +34,7 @@ import robocode.TeamRobot;
  * @author ribadas
  */
 public class SergioReis extends TeamRobot {
+	
 
 	public static String RULES_FILE = "sergioReisRules.drl";
 	public static String CONSULTA_ACCIONES = "query";
@@ -43,13 +44,15 @@ public class SergioReis extends TeamRobot {
 	private StatefulKnowledgeSession ksession;  // Memoria activa
 	private Vector<FactHandle> schedules = new Vector<FactHandle>();
 	private int missedCount;
-
+	private Vector<String> scannedRobots;
 
 	public SergioReis(){
 	}
 
 	@Override
 	public void run() {
+		
+		this.scannedRobots = new Vector<String>();
 		
 		setBodyColor(Color.green);
 		setGunColor(Color.blue);
@@ -208,7 +211,15 @@ public class SergioReis extends TeamRobot {
 	@Override
 	public void onScannedRobot(ScannedRobotEvent ee) {
 
-		if(isTeammate(ee.getName())){
+		String name = ee.getName();
+
+		if(!scannedRobots.contains(getRadical(name)) && scannedRobots.isEmpty()){
+			scannedRobots.add(name);
+		} else if(!scannedRobots.contains(getRadical(name))){
+			schedules.add(ksession.insert(new LeaderFound(name)));
+		}
+		
+		if(isTeammate(name)){
 			System.out.println("Robo da mesma espŽcie!");
 		} else {
 			schedules.add(ksession.insert(ee));    		
@@ -228,7 +239,7 @@ public class SergioReis extends TeamRobot {
 		return Integer.parseInt(n);
 	}
 
-	static public String getBotNameWithNoNumber(String name) {
+	static public String getRadical(String name) {
 		String n = "0";
 		int hi = name.indexOf("(");
 		if (hi >= 0) { 
